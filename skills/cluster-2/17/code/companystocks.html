@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Stock Chart</title>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script type="text/javascript">
+window.onload = function () 
+{
+
+    var dataPoints = ["1,AMZN,100", "1,FB,100", "1,GOOGL,1000", "1,MSFT,40", "2,AMZN,200", "2,FB,150",
+    "2,GOOGL,1100", "2,MSFT,50", "3,AMZN,300", "3,FB,200", "3,GOOGL,1200", "3,MSFT,60", "4,AMZN,400",
+    "4,FB,250", "4,GOOGL,1300", "4,MSFT,70", "5,AMZN,500", "5,FB,300", "5,GOOGL,1400", "5,MSFT,80",
+    "6,AMZN,600", "6,FB,350", "6,GOOGL,1500", "6,MSFT,90", "7,AMZN,700", "7,FB,400", "7,GOOGL,1600",
+    "7,MSFT,100", "8,AMZN,800", "8,FB,450", "8,GOOGL,1700", "8,MSFT,110", "9,AMZN,900", "9,FB,500",
+    "9,GOOGL,1800", "9,MSFT,120", "10,AMZN,1100", "10,FB,550", "10,GOOGL,1900", "10,MSFT,130"];
+
+    var google = [];
+    var microsoft = [];
+    var amazon = [];
+    var facebook = [];
+
+    var points = [];
+
+    for (var i = 0; i < dataPoints.length; i++)
+    {
+        if (dataPoints.length > 0)
+        {
+            points = dataPoints[i].split(",");
+
+                switch (points[1])
+                {
+                    case 'GOOGL':
+                        google.push({ 
+                            x: parseInt(points[0]), 
+                            y: parseInt(points[2]) 		
+                        });
+                        break;
+                    case 'FB':
+                        facebook.push({ 
+                            x: parseInt(points[0]), 
+                            y: parseInt(points[2]) 		
+                        });
+                        break;
+                    case 'AMZN':
+                        amazon.push({ 
+                            x: parseInt(points[0]), 
+                            y: parseInt(points[2]) 		
+                        });
+                        break;
+                    case 'MSFT':
+                            microsoft.push({ 
+                                x: parseInt(points[0]), 
+                                y: parseInt(points[2]) 		
+                            });
+                            break;
+                    default:
+                        break;
+                }
+        }
+    }
+
+    var chart = new CanvasJS.Chart("chartContainer", 
+    {
+        //theme: "light2", // "light1", "light2", "dark1", "dark2"
+        animationEnabled: true,
+        title:{
+            text: "Company Stocks"  
+        },
+        axisX: {
+            lineColor: "black",
+            labelFontColor: "black"
+        },
+        axisY2: {
+              gridThickness: 0,
+            title: "Stock Price",
+            titleFontColor: "black",
+            labelFontColor: "black"
+        },
+        legend: {
+            cursor: "pointer",
+        },
+        toolTip: {
+            shared: true
+        },
+        data: [{
+            type: "spline",
+            name: "GOOGL",
+            yValueFormatString: "#0.##",
+            showInLegend: true,
+            dataPoints: google
+        },
+        {
+            type: "spline",
+            name: "MSFT",
+            yValueFormatString: "#0.##",
+            showInLegend: true,
+            dataPoints: microsoft
+        },
+        {
+            type: "spline",
+            name: "AMZN",
+            yValueFormatString: "#0.##",
+            showInLegend: true,
+            dataPoints: amazon
+        },
+        {
+            type: "spline",
+            name: "FB",
+            yValueFormatString: "#0.##",
+            showInLegend: true,
+            dataPoints: facebook
+        }]
+    });
+    chart.render();
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+</html>
