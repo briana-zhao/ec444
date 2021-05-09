@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>E-Voting</title>
+  <style>
+    .container {
+        height: 350px;
+        position: relative;
+        border: 3px;
+        background-color:rgb(253, 198, 201);
+    }
+
+    .containerbutton {
+        height: 250px;
+        position: relative;
+        border: 3px;
+        background-color:rgb(198, 222, 253);
+    }
+
+    .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+  <h1 style="text-align:center;font-family:verdana;color:rgb(52, 53, 139);">E-Voting</h1>
+  <h2 style="text-align:center;font-family:verdana;color:rgb(201, 28, 57)">Quest 4</h2>
+  <h3 style="text-align:center;font-family:verdana;color:rgb(199, 25, 63)">By: Shineun Yoon and Briana Zhao</h3>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <div class="container">
+    <div class="center">
+        <h3 style="font-size: 110%;font-family:verdana;font-weight:bold;text-align:center;">Enter a color to check its vote count ('Red', 'Green', or 'Blue'):</h3>
+        <input type="text" id="queryText" placeholder="Enter a color" style="font-size: 90%;font-style:italic;font-family:fantasy;">
+        <button onClick="querycolor()" style="font-size:100%;font-family:verdana;font-weight:bold;">Check</button>
+        <p style="font-size: 90%;font-family:verdana;font-weight:bold;text-align:center;"> The vote count is: <span id="output"></span></p>
+    </div>
+  </div>
+  <div class="containerbutton">
+    <div class="center">
+        <button onclick="resetfunction()" style="font-size:100%;font-family:verdana;font-weight:bold;text-align:center;">Reset Vote Counts</button>
+    </div>
+  </div>
+
+  <script>
+    var querySet = null;
+    var reset = 0;
+
+    function querycolor() {
+      querySet = document.getElementById("queryText").value;
+    }
+
+    function resetfunction() {
+        reset = 1;
+    }
+
+    $(function () 
+    {
+        var socket = io();
+
+        socket.on('queryEmit', function (queryResult) {
+            var printQueryResult = queryResult;
+            document.getElementById("output").innerHTML=printQueryResult;
+        });
+
+      setInterval(function(){
+          socket.emit('queryValue', querySet);
+          socket.emit('resetValue', reset);
+          reset = 0;
+      }, 1000);
+
+    });
+  </script>
+</body>
+
+</html>

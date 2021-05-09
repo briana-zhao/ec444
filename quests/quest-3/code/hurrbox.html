@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Hurricane Box</title>
+  <style>
+    .container {
+        height: 150px;
+        position: relative;
+        border: 3px;
+        background-color:rgb(185, 244, 252);
+    }
+
+    .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+  <h1 style="text-align:center;font-family:verdana;color:rgb(95, 78, 190);">Hurricane Box</h1>
+  <h2 style="text-align:center;font-family:verdana;color:mediumvioletred">Quest 3</h2>
+  <h3 style="text-align:center;font-family:verdana;color:mediumvioletred">By: Shineun Yoon and Briana Zhao</h3>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <div class="container">
+    <div class="center">
+        <h3 style="font-size: 90%;font-family:verdana;font-weight:bold;text-align:center;">Set the LED intensity (0 = off, 9 = max):</h3>
+        <input type="text" id="ledText" placeholder="Enter value 0-9:" style="font-size: 90%;font-style:italic;font-family:fantasy;">
+        <button onClick="setLED()" style="font-size:100%;font-family:verdana;font-weight:bold;">Set</button>
+    </div>
+  </div>
+  <div id="vibrationXChartContainer" align-content="center" style="height: 360px; width: 90%"></div>
+  <div id="vibrationYChartContainer" align-content="center" style="height: 360px; width: 90%"></div>
+  <div id="vibrationZChartContainer" align-content="center" style="height: 360px; width: 90%"></div>
+  <div id="temperatureChartContainer" align-content="center" style="height: 360px; width: 90%"></div>
+  <div id="batteryVoltageChartContainer" align-content="center" style="height: 360px; width: 90%"></div>
+
+  <script>
+    var ledSet = null;
+
+    function setLED() {
+      ledSet = document.getElementById("ledText").value;
+    }
+
+    $(function () 
+    {
+        var socket = io();
+
+        socket.on('vibrationX', function (vibrationXChart) {
+            var chart = new CanvasJS.Chart("vibrationXChartContainer", vibrationXChart);
+            chart.render();
+        });
+
+        socket.on('vibrationY', function (vibrationYChart) {
+            var chart = new CanvasJS.Chart("vibrationYChartContainer", vibrationYChart);
+            chart.render();
+        });
+
+        socket.on('vibrationZ', function (vibrationZChart) {
+            var chart = new CanvasJS.Chart("vibrationZChartContainer", vibrationZChart);
+            chart.render();
+        });
+
+        socket.on('temperature', function (temperatureChart) {
+            var chart = new CanvasJS.Chart("temperatureChartContainer", temperatureChart);
+            chart.render();
+        });
+
+        socket.on('batteryVoltage', function (batteryVoltageChart) {
+            var chart = new CanvasJS.Chart("batteryVoltageChartContainer", batteryVoltageChart);
+            chart.render();
+        });
+
+      setInterval(function(){
+          socket.emit('ledValue', ledSet);
+          alarmSet = null;
+      }, 1000);
+
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Quest5</title>
+  <style>
+    .containerstop {
+        height: 100px;
+        position: relative;
+        border: 3px;
+        background-color:rgb(253, 198, 201);
+    }
+
+    .containergo {
+        height: 100px;
+        position: relative;
+        border: 3px;
+        background-color:rgb(203, 253, 198);
+    }
+
+    .containerright {
+        height: 100px;
+        position: relative;
+        border: 3px;
+        background-color:rgb(198, 226, 253);
+    }
+
+    .containerleft {
+        height: 100px;
+        position: relative;
+        border: 3px;
+        background-color:rgb(253, 252, 198);
+    }
+
+    .center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    }
+  </style>
+</head>
+
+<body>
+  <h1 style="text-align:center;font-family:verdana;color:rgb(23, 134, 47);">Quest 5: Driving the Buggy</h1>
+  <h2 style="text-align:center;font-family:verdana;color:rgb(25, 199, 170)">By: Shineun Yoon and Briana Zhao</h3>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="http://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <iframe src="http://brianaec444.mynetgear.com:9500/" height="480" width="640"></iframe>
+  <div class="containerstop">
+    <div class="center">
+        <button onClick="stopfunction()" style="font-size:100%;font-family:verdana;font-weight:bold;">Stop</button>
+    </div>
+  </div>
+  <div class="containergo">
+    <div class="center">
+        <button onclick="gofunction()" style="font-size:100%;font-family:verdana;font-weight:bold;text-align:center;">Go</button>
+    </div>
+  </div>
+  <div class="containerright">
+    <div class="center">
+        <button onclick="rightfunction()" style="font-size:100%;font-family:verdana;font-weight:bold;text-align:center;">Right</button>
+    </div>
+  </div>
+  <div class="containerleft">
+    <div class="center">
+        <button onclick="leftfunction()" style="font-size:100%;font-family:verdana;font-weight:bold;text-align:center;">Left</button>
+    </div>
+  </div>
+  <div id="velocityChartContainer" align-content="center" style="height: 360px; width: 90%"></div>
+
+  <script>
+        var stop_pressed = 0;
+        var go_pressed = 0;
+        var left_pressed = 0;
+        var right_pressed = 0;
+
+        var sendVal = "";
+
+        function stopfunction() {
+            stop_pressed = 1;
+        }
+
+        function gofunction() {
+            go_pressed = 1;
+        }
+
+        function leftfunction() {
+            left_pressed = 1;
+        }
+
+        function rightfunction() {
+            right_pressed = 1;
+        }
+
+        $(function () 
+        {
+            var socket = io();
+
+            socket.on('velocity', function (velocityChart) {
+                var chart = new CanvasJS.Chart("velocityChartContainer", velocityChart);
+                chart.render();
+            });
+
+            setInterval(function(){
+
+                if (stop_pressed == 1)
+                {
+                    sendVal = "S";
+                }
+                else if (go_pressed == 1)
+                {
+                    sendVal = "G";
+                }
+                else if (left_pressed == 1)
+                {
+                    sendVal = "L";
+                }
+                else if (right_pressed == 1)
+                {
+                    sendVal = "R";
+                }
+
+                console.log(sendVal);
+
+                socket.emit('sendValue', sendVal);
+
+                sendVal = "";
+                stop_pressed = 0;
+                go_pressed = 0;
+                left_pressed = 0;
+                right_pressed = 0;
+            }, 1000);
+        });
+  </script>
+</body>
+
+</html>
